@@ -48,8 +48,8 @@ sudo certbot certonly  --non-interactive \
 
 cat <<EOF > /etc/nginx/sites-available/proxy_site
 upstream backend_servers {
-    server 10.0.4.100:443;
-    server 10.0.4.200:443;
+    server 10.216.4.100:443;
+    server 10.216.4.200:443;
 }
 
 server {
