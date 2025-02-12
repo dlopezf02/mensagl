@@ -28,14 +28,14 @@ sudo systemctl restart mysql
 sleep 20
 
 echo "Obteniendo información del maestro..."
-MASTER_STATUS=$(mysql -h "10.0.3.10" -u "${DB_USERNAME}" -p"${DB_PASSWORD}" -e "SHOW MASTER STATUS\G" 2>/dev/null)
+MASTER_STATUS=$(mysql -h "10.216.3.10" -u "${DB_USERNAME}" -p"${DB_PASSWORD}" -e "SHOW MASTER STATUS\G" 2>/dev/null)
 BINLOG_FILE=$(echo "$MASTER_STATUS" | grep "File:" | awk '{print $2}')
 BINLOG_POSITION=$(echo "$MASTER_STATUS" | grep "Position:" | awk '{print $2}')
 echo "Archivo binlog: $BINLOG_FILE, Posición: $BINLOG_POSITION"
 
 mysql -u root <<SQL
 CHANGE MASTER TO
-    MASTER_HOST='10.0.3.10',
+    MASTER_HOST='10.216.3.10',
     MASTER_USER='${DB_USERNAME}',
     MASTER_PASSWORD='${DB_PASSWORD}',
     MASTER_LOG_FILE='$BINLOG_FILE',
