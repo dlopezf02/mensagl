@@ -61,14 +61,14 @@ echo "Installing and configuring NGINX..."
 
 cat <<EOF > /etc/nginx/sites-available/proxy_site
 upstream backend_meets {
-    server 10.0.3.100:443;
-    server 10.0.3.200:443;
-#    server 10.0.3.150:443;
+    server 10.216.3.100:443;
+    server 10.216.3.200:443;
+#    server 10.216.3.150:443;
 }
 
 upstream backend_xmpp {
-    server 10.0.3.100:12345;
-    server 10.0.3.200:12345;
+    server 10.216.3.100:12345;
+    server 10.216.3.200:12345;
 }
 
 server {
@@ -158,23 +158,23 @@ rm /etc/nginx/sites-available/default
 cat <<STREAM_CONF | sudo tee -a /etc/nginx/nginx.conf > /dev/null
 stream {
     upstream backend_xmpp_5222 {
-        server 10.0.3.100:5222;
-        server 10.0.3.200:5222;
+        server 10.216.3.100:5222;
+        server 10.216.3.200:5222;
     }
 
     upstream backend_xmpp_5280 {
-        server 10.0.3.100:5280;
-        server 10.0.3.200:5280;
+        server 10.216.3.100:5280;
+        server 10.216.3.200:5280;
     }
 
     upstream backend_xmpp_5281 {
-        server 10.0.3.100:5281;
-        server 10.0.3.200:5281;
+        server 10.216.3.100:5281;
+        server 10.216.3.200:5281;
     }
 
     upstream backend_xmpp_5347 {
-        server 10.0.3.100:5347;
-        server 10.0.3.200:5347;
+        server 10.216.3.100:5347;
+        server 10.216.3.200:5347;
     }
 
     upstream backend_xmpp_4443 {
@@ -183,21 +183,21 @@ stream {
     }
 
     upstream backend_xmpp_10000 {
-        server 10.0.3.100:10000;
-        server 10.0.3.200:10000;
+        server 10.216.3.100:10000;
+        server 10.216.3.200:10000;
     }
 
     upstream backend_xmpp_5269 {
-        server 10.0.3.100:5269;
-        server 10.0.3.200:5269;
+        server 10.216.3.100:5269;
+        server 10.216.3.200:5269;
     }
     upstream backend_xmpp_5270 {
-        server 10.0.3.100:5270;
-        server 10.0.3.200:5270;
+        server 10.216.3.100:5270;
+        server 10.216.3.200:5270;
     }
     upstream backend_mysql {
-        server 10.0.3.10:3306;
-        server 10.0.3.20:3306;
+        server 10.216.3.10:3306;
+        server 10.216.3.20:3306;
     }
 
     server {
