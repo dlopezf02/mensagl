@@ -72,7 +72,7 @@ admin = { 'mario@${DUCKDNS_SUBDOMAIN}.duckdns.org' };
 VirtualHost '${DUCKDNS_SUBDOMAIN}.duckdns.org'
 
 storage = 'sql'
-sql = { driver = 'MySQL', database = 'xmpp_db', username = '${DB_USERNAME}', password = '${DB_PASSWORD}', host = '10.0.3.10' }
+sql = { driver = 'MySQL', database = 'xmpp_db', username = '${DB_USERNAME}', password = '${DB_PASSWORD}', host = '10.216.3.10' }
 
 ssl = {
     certificate = 'certs/${DUCKDNS_SUBDOMAIN}.duckdns.org.crt',
@@ -100,7 +100,7 @@ ssl = {
 
 sudo apt install mysql-client mysql-server -y
 sleep 360
-sudo mysql -h "10.0.3.10" -u "${DB_USERNAME}" -p"${DB_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS xmpp_db;"
+sudo mysql -h "10.216.3.10" -u "${DB_USERNAME}" -p"${DB_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS xmpp_db;"
 
 sudo systemctl restart prosody
 sudo prosodyctl register mario ${DUCKDNS_SUBDOMAIN}.duckdns.org Admin123
