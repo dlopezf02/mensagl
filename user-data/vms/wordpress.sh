@@ -51,7 +51,7 @@ sudo -u www-data -k -- wp core config --dbname="${wDBName}" --dbuser="${DB_USERN
 sudo -u www-data -k -- wp core install --url="${DUCKDNS_SUBDOMAIN2}.duckdns.org" --title="MensAGL" --admin_user="${DB_USERNAME}" --admin_password="${DB_PASSWORD}" --admin_email="${EMAIL}" --path=/var/www/html
 
 # === Install WordPress Plugins ===
-PLUGINS=("supportcandy" "updraftplus" "user-registration" "wp-mail-smtp" "wps-hide-login")
+PLUGINS=("supportcandy" "updraftplus" "user-registration" "wp-mail-smtp")
 for PLUGIN in "${PLUGINS[@]}"; do
   sudo -u www-data -k -- wp plugin install "$PLUGIN" --activate --path=/var/www/html
 done
