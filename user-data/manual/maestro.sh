@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-MASTER_IP="10.0.1.10"
-SLAVE_IP="10.0.1.20"
+MASTER_IP="10.216.1.10"
+SLAVE_IP="10.216.1.20"
 MASTER_USER="replicador"
 MASTER_PASSWORD="Admin123"
 
