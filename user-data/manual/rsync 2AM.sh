@@ -2,7 +2,7 @@
 
 
 MAESTRO_USER="osboxes"  
-MAESTRO_IP="192.168.31.221" 
+MAESTRO_IP="192.168.31.216" 
 DB_NAME="sedes"  
 BACKUP_DIR="/var/backups/mysql_maestro" 
 SSH_KEY="/home/osboxes/.ssh/id_rsa"  
