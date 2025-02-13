@@ -178,8 +178,8 @@ stream {
     }
 
     upstream backend_xmpp_4443 {
-        server 10.0.3.100:4443;
-        server 10.0.3.200:4443;
+        server 10.216.3.100:4443;
+        server 10.216.3.200:4443;
     }
 
     upstream backend_xmpp_10000 {
