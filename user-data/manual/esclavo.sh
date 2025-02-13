@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MASTER_IP="10.0.1.10"
+MASTER_IP="10.216.1.10"
 MASTER_USER="replicador"
 MASTER_PASSWORD="Admin123"
 
