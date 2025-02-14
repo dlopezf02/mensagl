@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#Diego López: Este es el script que hay que ejecutar, dandole permisos de ejecución. Lo que 
 # sudo prosodyctl --root cert import /etc/certs/
 
 # The name of the user for lab
