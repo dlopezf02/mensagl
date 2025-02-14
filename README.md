@@ -1,4 +1,4 @@
-LA VPC TIENE QUE SER LA 10.2XX.0.0/16
+
 
 # MensAGL 🔥 LosCowboysDelInfierno 🔥
 
@@ -33,12 +33,12 @@ git clone https://github.com/cfuentesc01/mensagl-equipo2.git
 cd mensagl-equipo2
 ```
 
-2. Dentro de `aws scripts` ejecuta `installation.sh` 🧑‍💻
+2. Dentro de `aws-cli` ejecuta `start.sh` 🧑‍💻
 
 ```bash
 cd 'aws-cli'
 chmod +x start.sh
-./istart.sh
+./start.sh
 ```
 Tambíen existen otros scripts de AWS CLI para crear objetos en AWS de forma separada.
 
