@@ -29,8 +29,8 @@ El servicio de incidencias se compone de:
 1. Clona el repositorio ♻️
 
 ```bash
-git clone https://github.com/cfuentesc01/mensagl-equipo2.git
-cd mensagl-equipo2
+git clone https://github.com/dlopezf02/mensagl.git
+cd mensagl
 ```
 
 2. Dentro de `aws-cli` ejecuta `start.sh` 🧑‍💻
