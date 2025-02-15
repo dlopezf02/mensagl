@@ -367,6 +367,61 @@ Resources:
         - Key: Name
           Value: MYSQ-2
 
+##########RDS#########
+Resources:
+  RDSSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: wp-rds-subnet-group
+      DBSubnetGroupDescription: RDS Subnet Group for WordPress
+      SubnetIds:
+        - !Ref SubnetPrivate1
+        - !Ref SubnetPrivate2
+      Tags:
+        - Key: Name
+          Value: wp-rds-subnet-group
+
+  SecurityGroupRDS:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for RDS MySQL
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: RDS-MySQL
+
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: wordpress-db
+      DBInstanceClass: db.t3.medium
+      Engine: mysql
+      AllocatedStorage: 20
+      StorageType: gp2
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      VPCSecurityGroups:
+        - !Ref SecurityGroupRDS
+      BackupRetentionPeriod: 7
+      PubliclyAccessible: false
+      AvailabilityZone: !Sub ${AWS::Region}a
+      MultiAZ: false
+      Tags:
+        - Key: Name
+          Value: wordpress-db
+Outputs:
+  RDSEndpoint:
+    Description: RDS Endpoint
+    Value: !GetAtt RDSInstance.Endpoint.Address
+
+
+
   EC2XMPP1:
     Type: AWS::EC2::Instance
     Properties:
