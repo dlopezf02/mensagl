@@ -1,0 +1,246 @@
+Description: "Create VPC, Subnets, and Security Groups for User"
+
+Parameters:
+  Alumno:
+    Type: String
+    Description: "Personal name"
+  MyIP:
+    Type: String
+    Default: "0.0.0.0/0"
+    Description: "Your public IP range or '0.0.0.0/0' for open access"
+
+Resources:
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.216.0.0/16"
+      InstanceTenancy: "default"
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-vpc"
+    Metadata:
+      'AWS::CloudFormation::Designer': {}
+
+  SubnetPublic1:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "10.216.1.0/24"
+      AvailabilityZone: !Sub "${AWS::Region}a"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-subnet-public1-${AWS::Region}a"
+
+  SubnetPublic2:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "10.216.2.0/24"
+      AvailabilityZone: !Sub "${AWS::Region}b"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-subnet-public2-${AWS::Region}b"
+
+  SubnetPrivate1:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "10.216.3.0/24"
+      AvailabilityZone: !Sub "${AWS::Region}a"
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-subnet-private1-${AWS::Region}a"
+
+  SubnetPrivate2:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "10.216.4.0/24"
+      AvailabilityZone: !Sub "${AWS::Region}b"
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-subnet-private2-${AWS::Region}b"
+
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-igw"
+
+  AttachGateway:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTablePublic:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-rtb-public"
+
+  RoutePublic:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref RouteTablePublic
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnetRouteTableAssociation1:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref SubnetPublic1
+      RouteTableId: !Ref RouteTablePublic
+
+  PublicSubnetRouteTableAssociation2:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref SubnetPublic2
+      RouteTableId: !Ref RouteTablePublic
+
+  EIP:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: "vpc"
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-eip-${AWS::Region}a"
+
+  NATGateway:
+    Type: "AWS::EC2::NatGateway"
+    Properties:
+      SubnetId: !Ref SubnetPublic1
+      AllocationId: !GetAtt EIP.AllocationId
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-nat-public1-${AWS::Region}a"
+
+  RouteTablePrivate1:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-rtb-private1-${AWS::Region}a"
+
+  RoutePrivate1:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref RouteTablePrivate1
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NATGateway
+
+  PrivateSubnetRouteTableAssociation1:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref SubnetPrivate1
+      RouteTableId: !Ref RouteTablePrivate1
+
+  RouteTablePrivate2:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "vpc-mensagl-2025-${Alumno}-rtb-private2-${AWS::Region}b"
+
+  RoutePrivate2:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref RouteTablePrivate2
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NATGateway
+
+  PrivateSubnetRouteTableAssociation2:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref SubnetPrivate2
+      RouteTableId: !Ref RouteTablePrivate2
+
+  SecurityGroupProxy:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Mensagl Security group - Proxy-inverso"
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref MyIP
+      Tags:
+        - Key: Name
+          Value: "Proxy-inverso"
+
+  SecurityGroupXMPP:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Mensagl Security group - Servidor-Mensajeria"
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 1000
+          ToPort: 1000
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 5269
+          ToPort: 5269
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 4443
+          ToPort: 4443
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 5281
+          ToPort: 5281
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 5280
+          ToPort: 5280
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 5347
+          ToPort: 5347
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 5222
+          ToPort: 5222
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 1000
+          ToPort: 1000
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 12345
+          ToPort: 12345
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: !Ref MyIP
+      Tags:
+        - Key: Name
+          Value: "Servidor-Mensajeria"
+
+  SecurityGroupMYSQL:
+    Type: "AWS::EC2::SecurityGroup"
