@@ -286,3 +286,164 @@ Outputs:
     Description: SSH key pair material
     Value: !GetAtt SSHKeyPair.KeyMaterial
 #############EC2###########
+Resources:
+  EC2Proxy1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-04b4f1a9cf54c11d0
+      SubnetId: !Ref SubnetPublic1
+      SecurityGroupIds: 
+        - !Ref SecurityGroupProxy
+      PrivateIpAddress: 10.216.1.10
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: PROXY-1
+
+  EC2Proxy2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-04b4f1a9cf54c11d0
+      SubnetId: !Ref SubnetPublic2
+      SecurityGroupIds: 
+        - !Ref SecurityGroupProxy
+      PrivateIpAddress: 10.216.2.10
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: PROXY-2
+
+  EC2MySQL1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-04b4f1a9cf54c11d0
+      SubnetId: !Ref SubnetPrivate1
+      SecurityGroupIds: 
+        - !Ref SecurityGroupMySQL
+      PrivateIpAddress: 10.216.3.10
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: MYSQ-1
+
+  EC2MySQL2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-04b4f1a9cf54c11d0
+      SubnetId: !Ref SubnetPrivate1
+      SecurityGroupIds: 
+        - !Ref SecurityGroupMySQL
+      PrivateIpAddress: 10.216.3.20
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: MYSQ-2
+
+  EC2XMPP1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-04b4f1a9cf54c11d0
+      SubnetId: !Ref SubnetPrivate1
+      SecurityGroupIds: 
+        - !Ref SecurityGroupXMPP
+      PrivateIpAddress: 10.216.3.100
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: XMPP-1
+
+  EC2XMPP2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-04b4f1a9cf54c11d0
+      SubnetId: !Ref SubnetPrivate1
+      SecurityGroupIds: 
+        - !Ref SecurityGroupXMPP
+      PrivateIpAddress: 10.216.3.200
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: XMPP-2
+
+  EC2Wordpress1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-04b4f1a9cf54c11d0
+      SubnetId: !Ref SubnetPrivate2
+      SecurityGroupIds: 
+        - !Ref SecurityGroupWordpress
+      PrivateIpAddress: 10.216.4.100
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: WORDPRESS-1
+
+  EC2Wordpress2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-04b4f1a9cf54c11d0
+      SubnetId: !Ref SubnetPrivate2
+      SecurityGroupIds: 
+        - !Ref SecurityGroupWordpress
+      PrivateIpAddress: 10.216.4.200
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: WORDPRESS-2
+
