@@ -1,0 +1,71 @@
+Description: "Add RDS MySQL Instance for WordPress"
+
+Parameters:
+  DBUsername:
+    Type: String
+    Description: "RDS Wordpress Username"
+  DBPassword:
+    Type: String
+    Description: "RDS Wordpress Password"
+    NoEcho: true
+
+  Region:
+    Type: String
+    Default: "us-east-1"
+    Description: "AWS Region"
+  AvailabilityZone:
+    Type: String
+    Description: "Availability Zone"
+    Default: "us-east-1a"
+  SubnetPrivate1:
+    Type: String
+    Description: "Private Subnet 1 ID"
+  SubnetPrivate2:
+    Type: String
+    Description: "Private Subnet 2 ID"
+  VPCId:
+    Type: String
+    Description: "VPC ID"
+
+Resources:
+  RDSSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      DBSubnetGroupDescription: "RDS Subnet Group for WordPress"
+      SubnetIds: 
+        - !Ref SubnetPrivate1
+        - !Ref SubnetPrivate2
+
+  SecurityGroupRDS:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      GroupDescription: "Security group for RDS MySQL"
+      VpcId: !Ref VPCId
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: "0.0.0.0/0"  # Replace with actual WordPress server CIDR
+
+  RDSInstance:
+    Type: "AWS::RDS::DBInstance"
+    Properties: 
+      DBInstanceIdentifier: "wordpress-db"
+      DBInstanceClass: "db.t3.medium"
+      Engine: "mysql"
+      AllocatedStorage: 20
+      StorageType: "gp2"
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      VPCSecurityGroups: 
+        - !GetAtt SecurityGroupRDS.GroupId
+      BackupRetentionPeriod: 7
+      PubliclyAccessible: false
+      AvailabilityZone: !Ref AvailabilityZone
+      MultiAZ: false  # Ensures Single-AZ deployment
+
+Outputs:
+  RDSEndpoint:
+    Description: "RDS Endpoint"
+    Value: !GetAtt RDSInstance.Endpoint.Address
