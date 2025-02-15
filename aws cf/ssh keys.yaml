@@ -1,0 +1,17 @@
+Description: "Create SSH Key Pair for User"
+
+Parameters:
+  Alumno:
+    Type: String
+    Description: "Personal name"
+
+Resources:
+  SSHKeyPair:
+    Type: "AWS::EC2::KeyPair"
+    Properties:
+      KeyName: !Sub "ssh-mensagl-2025-${Alumno}"
+
+Outputs:
+  KeyMaterial:
+    Description: "SSH Key Material"
+    Value: !GetAtt SSHKeyPair.KeyMaterial
